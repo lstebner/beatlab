@@ -129,19 +129,20 @@ class App
 
   configure_app: ->
     express = express
-    @app.configure => @always_configure()
+    @always_configure()
 
-    @app.configure "development", =>
-      @app.use express.errorHandler(
-        dumpExceptions: true
-        showStack: true
-      )
+    switch @app.get("env")
+      when "development"
+        @app.use express.errorHandler(
+          dumpExceptions: true
+          showStack: true
+        )
 
-      @configure_for_development()
+        @configure_for_development()
 
-    @app.configure "production", =>
-      @app.use express.errorHandler()
-      @configure_for_production()
+      when "production"
+        @app.use express.errorHandler()
+        @configure_for_production()
 
     # TODO: state machine
     @is_configured = true
