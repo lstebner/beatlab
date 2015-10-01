@@ -862,14 +862,14 @@
         if (title == null) {
           title = filename;
         }
-        type = filename.substr(filename.indexOf("."));
+        type = filename.substr(filename.indexOf(".") + 1);
         return {
           source: "/beats/" + filename,
           title: title,
           type: type
         };
       };
-      return this.tracks = [track("morningbeat093015.wav", "Morning Beat 9/30/15"), track("eveningbeat092815.wav", "Evening Beat 9/28/15"), track("morningbeat092815.wav", "Morning Beat 9/28/15")];
+      return this.tracks = [track("morningbeat093015.wav", "Morning Beat 9/30/15"), track("eveningbeat092815.wav", "Evening Beat 9/28/15"), track("morningbeat092115_3.mp3", "Morning Beat 9/21/15"), track("morningbeat091715.mp3", "Morning Beat 9/17/15"), track("morningbeat091015.mp3", "Morning Beat 9/10/15"), track("morningbeat090415.mp3", "Morning Beat 9/04/15")];
     };
 
     HomeController.prototype.index = function() {
