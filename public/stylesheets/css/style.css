@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  padding: 30px;
 }
 body.no_scroll {
   overflow: hidden;
@@ -35,4 +36,13 @@ body.no_scroll {
   font-size: 24px;
   font-weight: 100;
   font-family: sans-serif;
+}
+h1 {
+  margin: 0;
+}
+.track {
+  margin: 18px 0;
+}
+.track .title {
+  margin-bottom: 6px;
 }
