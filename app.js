@@ -321,13 +321,13 @@
     }
 
     Router.prototype.register = function(type, path, controller, method) {
-      var new_route, resp;
+      var new_route;
       if (Router.debug) {
         console.log("router: add_route " + (type.toUpperCase()) + " " + path + ", " + controller.name + "#" + method);
       }
       new_route = [type, path, controller, method];
       this.routes.push(new_route);
-      resp = this.app[type](path, (function(_this) {
+      this.app[type](path, (function(_this) {
         return function(req, res) {
           var c;
           c = new controller(req, res);
@@ -337,7 +337,6 @@
           }
         };
       })(this));
-      console.log(resp);
       return new_route;
     };
 
