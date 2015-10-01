@@ -1,1 +1,887 @@
-(function(){var t,e,r,o,n,s,i=function(t,e){function r(){this.constructor=t}for(var o in e)u.call(e,o)&&(t[o]=e[o]);return r.prototype=e.prototype,t.prototype=new r,t.__super__=e.prototype,t},u={}.hasOwnProperty;e={},n=require("underscore"),s=require("underscore.string"),r={express:require("express"),http:require("http"),path:require("path"),mongoose:require("mongoose"),fs:require("fs")},r.Schema=r.mongoose.Schema,t=function(){function t(t){null==t&&(t={}),this.env=process.env.NODE_ENV,this.site_name=t.site_name,this.config=t.config,this.app=t.app,this.mongoose=t.mongoose,this.config=n.extend(e,this.config||{}),this.load_environment_config(),this.setup()}var e,o,s,i;return i=r.fs,s=r.express,e={title:"",base_url:"",meta_keywords:"",meta_description:"",css_version:1,js_version:1,port:3e3,debug:!1},o=__dirname.replace(/spec(\/|)/,""),t.set_site=function(t){this.site=t},t.init=function(e,r){return null==e&&(e={}),null==r&&(r=t),r===t?this.site=new t(e):this.site=r.init(e)},t.slugify=function(t,e){var r,o;return r="-",o=t.toString().replace(/[\s\.]+/g,r).toLowerCase().replace(new RegExp("[^a-z0-9"+r+"]","g"),r).replace(new RegExp(r+"+","g"),r),o.charAt(o.length-1)===r&&(o=o.substring(0,o.length-1)),o.charAt(0)===r&&(o=o.substring(1)),null!=e?o+"-"+e.getDate()+"-"+(e.getMonth()+1)+"-"+e.getFullYear():o},t.pretty_date=function(t){return moment(t).fromNow()},t.base_url=function(t,e){var r;return null==e&&(e=!1),null!=(r=this.site)?r.base_url(t,e):void 0},t.conf=function(t){var e;return null!=(e=this.site)?e.conf(t):void 0},t.get_conf=function(){var t;return null!=(t=this.site)?t.config:void 0},t.prototype.load_environment_config=function(){var t,e,r,s;s=o+"/app/conf/"+this.env+".conf",t=i.readFileSync(s,"UTF-8");try{if(r=JSON.parse(t),this.config=n.extend(this.config,r),this.config.debug)return console.log(this.env+" config loaded")}catch(u){if(e=u,this.config.debug)return console.log("error! parsing json in "+this.env+" conf")}},t.prototype.before_ready=function(){return 1},t.prototype.setup=function(){var e,o;for(e in r)o=r[e],this[e]=o;return this.configure_app(),this.router=new t.Router(this.app),this.setup_mongoose(),this.setup_routes(),this.listener=this.app.listen(this.config.port),this.listener?this.config.debug&&console.log("Express server listening on port %d in %s mode",this.listener.address().port,this.app.settings.env):this.config.debug&&console.log("listener did not start"),this.before_ready(),this.is_setup=!0,this.ready()},t.prototype.ready=function(){return 1},t.prototype.setup_mongoose=function(){return this.mongoose.connect("mongodb://"+this.conf("db_host")+"/"+this.conf("db_name"))},t.prototype.conf=function(t){var e;return null!=t&&(null!=(e=this.config)?e.hasOwnProperty(t):void 0)?this.config[t]:!1},t.prototype.base_url=function(t,e){var r;return null==t&&(t="/"),null==e&&(e=!1),"development"!==process.env.NODE_ENV||e?r=""+this.conf("base_url")+t:t},t.prototype.route=function(e,r,o){var n,s,i,u,p,a;if(null==o&&(o="get"),i="index",p="#",u=r.split(p),s=u[0].substr(0,1).toUpperCase()+u[0].substring(1),n=t[s+"Controller"],null==n)return this.config.debug?console.log("App route error, controller not found: "+s):!1;switch(a=null!=u[1]?u[1]:i,o){case"get":return this.router.get(e,n,a);case"post":return this.router.post(e,n,a)}},t.prototype.setup_routes=function(){return this.route("/sitemap","sitemap"),this.route("/post/:slug","post#index"),this.route("/category/:category","listing#by_category"),this.route("/tag/:tag","listing#by_tag"),this.route("/blog","listing#latest"),this.route("/store","store"),this.route("/about-me","home#about"),this.route("/","home")},t.prototype.configure_app=function(){return s=s,this.app.configure(function(t){return function(){return t.always_configure()}}(this)),this.app.configure("development",function(t){return function(){return t.app.use(s.errorHandler({dumpExceptions:!0,showStack:!0})),t.configure_for_development()}}(this)),this.app.configure("production",function(t){return function(){return t.app.use(s.errorHandler()),t.configure_for_production()}}(this)),this.is_configured=!0},t.prototype.always_configure=function(){return this.app.set("views",o+"/views"),this.app.set("view engine","jade"),this.app.use(s.bodyParser()),this.app.use(s.methodOverride()),this.app.use(this.app.router),this.app.use(s["static"](o+"/public"))},t.prototype.configure_for_development=function(){return 1},t.prototype.configure_for_production=function(){return 1},t}(),t.Schemas={},o=r.Schema,t.Schemas.Project=new o({title:{type:String,required:!0},order:{type:Number,"default":0},slug:{type:String,require:!0,unique:!0},description:{type:String,"default":""},display_url:{type:String,"default":""},full_url:{type:String,defalut:""},technologies:{type:o.Types.Mixed,"default":[]},images:{type:o.Types.Mixed,"default":[]},archived:{type:Boolean,"default":!1},group:{type:String,"default":"default"}}),t.Models={Project:r.mongoose.model("Project",t.Schemas.Project)},t.Router=function(){function t(t,e){if(this.app=t,this.opts=null!=e?e:{},!this.app)throw new Error("an app is required to create a Router");this.routes=[]}return t.debug=!1,t.prototype.register=function(e,r,o,n){var s;return t.debug&&console.log("router: add_route "+e.toUpperCase()+" "+r+", "+o.name+"#"+n),s=[e,r,o,n],this.routes.push(s),this.app[e](r,function(t){return function(e,r){var s;return s=new o(e,r),s["do"](n)?void 0:(console.error("method '"+n+"' not found for controller "+o),t.do_404(r))}}(this)),s},t.prototype.do_404=function(t){return t.status(404).send("Sorry, page not found!")},t.prototype.get=function(t,e,r){return this.register("get",t,e,r)},t.prototype.post=function(t,e,r){return this.register("post",t,e,r)},t.prototype.add_routes=function(t){var e,r,o,s,i;o=t.routes,s=[];for(r in o)i=o[r],e={type:"get",path:r,controller:t,method:null},n.isObject(i)?e=n.extend(e,i):e.method=i,s.push(this.register(e.type,e.path,e.controller,e.method));return s},t}(),t.View=function(){function e(t,e,r,o){this.data=null!=t?t:{},this.req=e,this.res=r,this.app=o,this.js_opts={},this.default_data(),this.set_view(this.data.view)}return e.prototype.default_data=function(){return this.data=n.extend({layout:!0,title:t.conf("site_name"),site_name:t.conf("site_name"),meta:{keywords:t.conf("site_keywords"),description:t.conf("site_description")},this_url:this.req.url,_:n,view:"index",disqus_shortname:t.conf("disqus_shortname"),cookies:null,body_class:"",single_upload_view:!1,this_url:this.req.url,pagination_data:{},uploads_filter:{},load_more:!0,display_comments:!1,no_uploads_message:!1,css_version:t.conf("css_version"),js_version:t.conf("js_version"),base_url:t.base_url(),auto_generated_id:this.auto_generate_id(),js_opts:this.js_opts,compiled_js:!1},this.data),this.data},e.prototype.auto_generate_id=function(){return"auto_id_"+(new Date).getTime().toString(36)},e.prototype.add_js_opts=function(t){return null==t&&(t={}),this.js_opts=n.extend(this.js_opts,t)},e.prototype.set_view=function(t){this.view=t},e.prototype.set_data=function(t,e){return this.data[t]=e},e.prototype.extend_data=function(t){return null==t&&(t={}),this.data=n.extend(this.data,t)},e.prototype.js_block=function(){return!1},e.prototype.render=function(){return this.data.js_opts&&this.add_js_opts(this.data.js_opts),this.data.compiled_js=this.js_block(),this.res.render(this.view,n.extend(t.get_conf(),this.data,{js_opts:JSON.stringify(this.js_opts)}))},e}(),t.Controller=function(){function e(t,e){this.req=t,this.res=e,this.requirements_list={},this.loaded_items=[],this.current_needs=[],this.public_methods=[],this.view_data={},this.view_to_render="",this.setup()}return e.prototype.name="base",e.prototype.view_class=t.View,e.prototype.setup=function(){return this.setup_preload()},e.prototype.setup_preload=function(){return 1},e.prototype.requires=function(t,e){var r,o,s,i,u,p,a,h,c,l;if(null==e&&(e="all"),n.isArray(t)||(t=[t]),r=function(t){return function(e,r){return t.requirements_list[e]=null!=t.requirements_list[e]?n.union(t.requirements_list[e],r):r}}(this),n.isObject(e)){for(a=null!=e.except?n.difference(this.public_methods,e.except):null!=e.only?n.intersection(this.public_methods,e.only):void 0,c=[],o=0,i=a.length;i>o;o++)p=a[o],c.push(r(p,t));return c}if("all"===e){for(h=this.public_methods,l=[],s=0,u=h.length;u>s;s++)p=h[s],l.push(r(p,t));return l}return r(e,t)},e.prototype.preload=function(t){return null==this.requirements_list[t]?!0:(this.current_needs=this.requirements_list[t],this.load(this.current_needs.join(" ")))},e.prototype["do"]=function(t,e){return this.requested_method=t,this.prevent_render=null!=e?e:!0,this.preload(this.requested_method),this.has_needs_met()?null!=this[this.requested_method]&&n.indexOf(this.public_methods,this.requested_method)>-1?(this[this.requested_method](),this.prevent_render||this.render()):(console.log("method not found or not public",this.name+"::"+this.requested_method),this.do_404()):setTimeout(function(t){return function(){return t["do"](t.requested_method,t.prevent_render)}}(this),50),!0},e.prototype.do_404=function(){return this.res.status(404),this.res.render("404",{title:" 404, man"})},e.prototype.param=function(t){return this.req.params.hasOwnProperty(t)?this.req.params[t]:!1},e.prototype.query=function(t){return this.req.query.hasOwnProperty(t)?this.req.query[t]:!1},e.prototype.cookie=function(t){return this.req.cookies&&this.req.cookies.hasOwnProperty(t)?this.req.cookies[t]:!1},e.prototype.body=function(t){return this.req.body&&this.req.body.hasOwnProperty(t)?this.req.body[t]:!1},e.prototype.redirect=function(t,e){return null==e&&(e=302),this.res.redirect(e,t)},e.prototype.load=function(t){var e,r,o,n;if(this.loaded_items){for(n=this.loaded_items,r=0,o=n.length;o>r;r++)e=n[r],t=t.replace(""+e,"");t=s.trim(t.replace(/\s\s/g,""))}else this.loaded_items=[];return t.length?!0:!1},e.prototype.loaded=function(t){return this.loaded_items||(this.loaded_items=[]),this.loaded_items.push(t)},e.prototype.has_needs_met=function(){var t,e,r,o,s;if(n.isEmpty(this.current_needs))return!0;for(t=!0,s=this.current_needs,e=0,r=s.length;r>e;e++)o=s[e],t=t&&n.indexOf(this.loaded_items,o)>-1;return t},e.prototype.json=function(t){return this.res.json(t)},e.prototype.render=function(t,e){return null==t&&(t=null),null==e&&(e=this.view_data),this.view_class?(this.before_render(),this.cancel_render?this.cancel_render=!1:(this.view_data.view=n.isEmpty(t)?n.isEmpty(this.view_to_render)?this.requested_method:this.view_to_render:t,this.current_view=new this.view_class(this.view_data,this.req,this.res,this.app),this.current_view.render(),this.after_render(),this.cancel_render=!1,this.current_view)):!1},e.prototype.set_view=function(t){return this.view_to_render=t,1},e.prototype.before_render=function(){return 1},e.prototype.after_render=function(){return 1},e}(),e.App=function(t){function o(){return o.__super__.constructor.apply(this,arguments)}var s,u,p;return i(o,t),s=r.express,p=r.mongoose,u=r.fs,o.init=function(t){return null==t&&(t={}),this.site=new e.App(n.extend({app:s(),mongoose:p,config:{port:3054,title:"Kids on the beat, beat kids | BeatLab",base_url:"http://beatlab.io",meta_keywords:"",meta_description:"",css_version:(new Date).getTime(),js_version:(new Date).getTime()},opts:t}))},o.prototype.ready=function(){},o.prototype.setup_routes=function(){return this.route("/","home#index"),this.route("/sitemap","sitemap#index")},o.prototype.always_configure=function(){var t;return s=s,t=315576e5,this.app.set("port",process.env.PORT||this.conf("port")),this.app.set("views",__dirname+"/views"),this.app.set("view engine","jade"),this.app.use(s.logger("dev")),this.app.use(s.cookieParser()),this.app.use(s.bodyParser()),this.app.use(s.session({secret:"whateverb34tlabb3r"})),this.app.use(s.methodOverride()),this.app.use(s["static"](__dirname+"/public",{maxAge:t})),this.app.use(this.app.router)},o.prototype.configure_for_development=function(){return this.app.use(s.errorHandler()),this.app.locals.pretty=!0},o.prototype.configure_for_production=function(){},o.prototype.before_ready=function(){},o}(t),e.Query=function(){function t(){}return t}(),e.Controller=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return i(e,t),e}(t.Controller),e.HomeView=function(t){function e(){return e.__super__.constructor.apply(this,arguments)}return i(e,t),e.prototype.js_block=function(){return'World.Home.init("#'+this.data.auto_generated_id+'", '+JSON.stringify(this.data.js_opts)+");"},e}(t.View),t.SitemapController=function(e){function r(){return r.__super__.constructor.apply(this,arguments)}return i(r,e),r.prototype.name="SitemapController",r.prototype.setup=function(){return this.public_methods=["index"],this.requires("sitemap_urls"),r.__super__.setup.apply(this,arguments)},r.prototype.load=function(){var e,r,o,n;for(n=["/"],this.sitemap_urls=[],e=0,r=n.length;r>e;e++)o=n[e],this.sitemap_urls.push(t.base_url(o,!0));return this.loaded("sitemap_urls")},r.prototype.index=function(){this.res.header("Content-type","text/plain"),this.res.end(n.uniq(this.sitemap_urls).join("\n"))},r}(t.Controller),t.HomeController=function(t){function r(){return r.__super__.constructor.apply(this,arguments)}var o;return i(r,t),o=e.Query,r.prototype.name="HomeController",r.prototype.view_class=e.HomeView,r.prototype.setup=function(){return this.public_methods=["index"],r.__super__.setup.apply(this,arguments)},r.prototype.load=function(t){!r.__super__.load.apply(this,arguments)},r.prototype.index=function(){return this.render("index")},r}(e.Controller),t.init({},e.App)}).call(this);
+// Generated by CoffeeScript 1.9.3
+(function() {
+  var App, BeatLab, Requires, Schema, _, _str,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  BeatLab = {};
+
+  _ = require('underscore');
+
+  _str = require('underscore.string');
+
+  Requires = {
+    express: require('express'),
+    http: require('http'),
+    path: require('path'),
+    mongoose: require('mongoose'),
+    fs: require('fs')
+  };
+
+  Requires.Schema = Requires.mongoose.Schema;
+
+  App = (function() {
+    var CONF_DEFAULTS, ROOT_DIR, express, fs;
+
+    fs = Requires.fs, express = Requires.express;
+
+    CONF_DEFAULTS = {
+      title: "",
+      base_url: '',
+      meta_keywords: '',
+      meta_description: '',
+      css_version: 1,
+      js_version: 1,
+      port: 3000,
+      debug: false
+    };
+
+    ROOT_DIR = __dirname.replace(/spec(\/|)/, "");
+
+    App.set_site = function(site) {
+      this.site = site;
+    };
+
+    App.init = function(opts, appclass) {
+      if (opts == null) {
+        opts = {};
+      }
+      if (appclass == null) {
+        appclass = App;
+      }
+      if (appclass === App) {
+        return this.site = new App(opts);
+      } else {
+        return this.site = appclass["init"](opts);
+      }
+    };
+
+    App.slugify = function(title, d) {
+      var replace, str;
+      replace = "-";
+      str = title.toString().replace(/[\s\.]+/g, replace).toLowerCase().replace(new RegExp("[^a-z0-9" + replace + "]", "g"), replace).replace(new RegExp(replace + "+", "g"), replace);
+      if (str.charAt(str.length - 1) === replace) {
+        str = str.substring(0, str.length - 1);
+      }
+      if (str.charAt(0) === replace) {
+        str = str.substring(1);
+      }
+      if (d != null) {
+        return str + "-" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+      } else {
+        return str;
+      }
+    };
+
+    App.pretty_date = function(date) {
+      return moment(date).fromNow();
+    };
+
+    App.base_url = function(uri, force_full) {
+      var ref;
+      if (force_full == null) {
+        force_full = false;
+      }
+      return (ref = this.site) != null ? ref.base_url(uri, force_full) : void 0;
+    };
+
+    App.conf = function(key) {
+      var ref;
+      return (ref = this.site) != null ? ref.conf(key) : void 0;
+    };
+
+    App.get_conf = function() {
+      var ref;
+      return (ref = this.site) != null ? ref.config : void 0;
+    };
+
+    function App(opts) {
+      if (opts == null) {
+        opts = {};
+      }
+      this.env = process.env.NODE_ENV;
+      this.site_name = opts.site_name, this.config = opts.config, this.app = opts.app, this.mongoose = opts.mongoose;
+      this.config = _.extend(CONF_DEFAULTS, this.config || {});
+      this.load_environment_config();
+      this.setup();
+    }
+
+    App.prototype.load_environment_config = function() {
+      var contents, e, env_conf, filepath;
+      filepath = ROOT_DIR + "/app/conf/" + this.env + ".conf";
+      contents = fs.readFileSync(filepath, "UTF-8");
+      try {
+        env_conf = JSON.parse(contents);
+        this.config = _.extend(this.config, env_conf);
+        if (this.config.debug) {
+          return console.log(this.env + " config loaded");
+        }
+      } catch (_error) {
+        e = _error;
+        if (this.config.debug) {
+          return console.log("error! parsing json in " + this.env + " conf");
+        }
+      }
+    };
+
+    App.prototype.before_ready = function() {
+      return 1;
+    };
+
+    App.prototype.setup = function() {
+      var key, val;
+      for (key in Requires) {
+        val = Requires[key];
+        this[key] = val;
+      }
+      this.configure_app();
+      this.router = new App.Router(this.app);
+      this.setup_mongoose();
+      this.setup_routes();
+      this.listener = this.app.listen(this.config.port);
+      if (this.listener) {
+        if (this.config.debug) {
+          console.log("Express server listening on port %d in %s mode", this.listener.address().port, this.app.settings.env);
+        }
+      } else {
+        if (this.config.debug) {
+          console.log("listener did not start");
+        }
+      }
+      this.before_ready();
+      this.is_setup = true;
+      return this.ready();
+    };
+
+    App.prototype.ready = function() {
+      return 1;
+    };
+
+    App.prototype.setup_mongoose = function() {
+      return this.mongoose.connect("mongodb://" + (this.conf('db_host')) + "/" + (this.conf('db_name')));
+    };
+
+    App.prototype.conf = function(key) {
+      var ref;
+      if ((key != null) && ((ref = this.config) != null ? ref.hasOwnProperty(key) : void 0)) {
+        return this.config[key];
+      } else {
+        return false;
+      }
+    };
+
+    App.prototype.base_url = function(uri, force_full) {
+      var url;
+      if (uri == null) {
+        uri = "/";
+      }
+      if (force_full == null) {
+        force_full = false;
+      }
+      if (process.env.NODE_ENV === 'development' && !force_full) {
+        return uri;
+      }
+      return url = "" + (this.conf('base_url')) + uri;
+    };
+
+    App.prototype.route = function(uri, dest, type) {
+      var controller, controller_name, default_method, dest_sp, dest_wedge, method_name;
+      if (type == null) {
+        type = "get";
+      }
+      default_method = "index";
+      dest_wedge = "#";
+      dest_sp = dest.split(dest_wedge);
+      controller_name = dest_sp[0].substr(0, 1).toUpperCase() + dest_sp[0].substring(1);
+      controller = App[controller_name + "Controller"];
+      if (controller == null) {
+        return (this.config.debug ? console.log("App route error, controller not found: " + controller_name) : false);
+      }
+      method_name = dest_sp[1] != null ? dest_sp[1] : default_method;
+      switch (type) {
+        case "get":
+          return this.router.get(uri, controller, method_name);
+        case "post":
+          return this.router.post(uri, controller, method_name);
+      }
+    };
+
+    App.prototype.setup_routes = function() {
+      this.route("/sitemap", "sitemap");
+      this.route("/post/:slug", "post#index");
+      this.route("/category/:category", "listing#by_category");
+      this.route("/tag/:tag", "listing#by_tag");
+      this.route("/blog", "listing#latest");
+      this.route("/store", "store");
+      this.route("/about-me", "home#about");
+      return this.route("/", "home");
+    };
+
+    App.prototype.configure_app = function() {
+      express = express;
+      this.always_configure();
+      switch (this.app.get("env")) {
+        case "development":
+          this.app.use(express.errorHandler({
+            dumpExceptions: true,
+            showStack: true
+          }));
+          this.configure_for_development();
+          break;
+        case "production":
+          this.app.use(express.errorHandler());
+          this.configure_for_production();
+      }
+      return this.is_configured = true;
+    };
+
+    App.prototype.always_configure = function() {
+      this.app.set("views", ROOT_DIR + "/views");
+      this.app.set("view engine", "jade");
+      this.app.use(express.bodyParser());
+      this.app.use(express.methodOverride());
+      this.app.use(this.app.router);
+      return this.app.use(express["static"](ROOT_DIR + "/public"));
+    };
+
+    App.prototype.configure_for_development = function() {
+      return 1;
+    };
+
+    App.prototype.configure_for_production = function() {
+      return 1;
+    };
+
+    return App;
+
+  })();
+
+  App.Schemas = {};
+
+  Schema = Requires.Schema;
+
+  App.Schemas.Project = new Schema({
+    title: {
+      type: String,
+      required: true
+    },
+    order: {
+      type: Number,
+      "default": 0
+    },
+    slug: {
+      type: String,
+      require: true,
+      unique: true
+    },
+    description: {
+      type: String,
+      "default": ""
+    },
+    display_url: {
+      type: String,
+      "default": ""
+    },
+    full_url: {
+      type: String,
+      defalut: ""
+    },
+    technologies: {
+      type: Schema.Types.Mixed,
+      "default": []
+    },
+    images: {
+      type: Schema.Types.Mixed,
+      "default": []
+    },
+    archived: {
+      type: Boolean,
+      "default": false
+    },
+    group: {
+      type: String,
+      "default": "default"
+    }
+  });
+
+  App.Models = {
+    Project: Requires.mongoose.model("Project", App.Schemas.Project)
+  };
+
+  App.Router = (function() {
+    Router.debug = true;
+
+    function Router(app, opts1) {
+      this.app = app;
+      this.opts = opts1 != null ? opts1 : {};
+      if (!this.app) {
+        throw new Error("an app is required to create a Router");
+      }
+      this.routes = [];
+    }
+
+    Router.prototype.register = function(type, path, controller, method) {
+      var new_route, resp;
+      if (Router.debug) {
+        console.log("router: add_route " + (type.toUpperCase()) + " " + path + ", " + controller.name + "#" + method);
+      }
+      new_route = [type, path, controller, method];
+      this.routes.push(new_route);
+      resp = this.app[type](path, (function(_this) {
+        return function(req, res) {
+          var c;
+          c = new controller(req, res);
+          if (!c["do"](method)) {
+            console.error("method '" + method + "' not found for controller " + controller);
+            return _this.do_404(res);
+          }
+        };
+      })(this));
+      console.log(resp);
+      return new_route;
+    };
+
+    Router.prototype.do_404 = function(res) {
+      return res.status(404).send("Sorry, page not found!");
+    };
+
+    Router.prototype.get = function(path, controller, method) {
+      return this.register('get', path, controller, method);
+    };
+
+    Router.prototype.post = function(path, controller, method) {
+      return this.register('post', path, controller, method);
+    };
+
+    Router.prototype.add_routes = function(controller) {
+      var data, path, ref, results, route;
+      ref = controller.routes;
+      results = [];
+      for (path in ref) {
+        route = ref[path];
+        data = {
+          type: "get",
+          path: path,
+          controller: controller,
+          method: null
+        };
+        if (_.isObject(route)) {
+          data = _.extend(data, route);
+        } else {
+          data.method = route;
+        }
+        results.push(this.register(data.type, data.path, data.controller, data.method));
+      }
+      return results;
+    };
+
+    return Router;
+
+  })();
+
+  App.View = (function() {
+    function View(data1, req1, res1, app) {
+      this.data = data1 != null ? data1 : {};
+      this.req = req1;
+      this.res = res1;
+      this.app = app;
+      this.js_opts = {};
+      this.default_data();
+      this.set_view(this.data.view);
+    }
+
+    View.prototype.default_data = function() {
+      this.data = _.extend({
+        layout: true,
+        title: App.conf("site_name"),
+        site_name: App.conf("site_name"),
+        meta: {
+          keywords: App.conf("site_keywords"),
+          description: App.conf("site_description")
+        },
+        this_url: this.req.url,
+        _: _,
+        view: 'index',
+        disqus_shortname: App.conf("disqus_shortname"),
+        cookies: null,
+        body_class: '',
+        single_upload_view: false,
+        this_url: this.req.url,
+        pagination_data: {},
+        uploads_filter: {},
+        load_more: true,
+        display_comments: false,
+        no_uploads_message: false,
+        css_version: App.conf("css_version"),
+        js_version: App.conf("js_version"),
+        base_url: App.base_url(),
+        auto_generated_id: this.auto_generate_id(),
+        js_opts: this.js_opts,
+        compiled_js: false
+      }, this.data);
+      return this.data;
+    };
+
+    View.prototype.auto_generate_id = function() {
+      return "auto_id_" + ((new Date()).getTime().toString(36));
+    };
+
+    View.prototype.add_js_opts = function(new_opts) {
+      if (new_opts == null) {
+        new_opts = {};
+      }
+      return this.js_opts = _.extend(this.js_opts, new_opts);
+    };
+
+    View.prototype.set_view = function(view) {
+      this.view = view;
+    };
+
+    View.prototype.set_data = function(key, val) {
+      return this.data[key] = val;
+    };
+
+    View.prototype.extend_data = function(more_data) {
+      if (more_data == null) {
+        more_data = {};
+      }
+      return this.data = _.extend(this.data, more_data);
+    };
+
+    View.prototype.js_block = function() {
+      return false;
+    };
+
+    View.prototype.render = function() {
+      if (this.data.js_opts) {
+        this.add_js_opts(this.data.js_opts);
+      }
+      this.data.compiled_js = this.js_block();
+      return this.res.render(this.view, _.extend(App.get_conf(), this.data, {
+        js_opts: JSON.stringify(this.js_opts)
+      }));
+    };
+
+    return View;
+
+  })();
+
+  App.Controller = (function() {
+    Controller.prototype.name = "base";
+
+    Controller.prototype.view_class = App.View;
+
+    function Controller(req1, res1) {
+      this.req = req1;
+      this.res = res1;
+      this.requirements_list = {};
+      this.loaded_items = [];
+      this.current_needs = [];
+      this.public_methods = [];
+      this.view_data = {};
+      this.view_to_render = "";
+      this.setup();
+    }
+
+    Controller.prototype.setup = function() {
+      return this.setup_preload();
+    };
+
+    Controller.prototype.setup_preload = function() {
+      return 1;
+    };
+
+    Controller.prototype.requires = function(needs_list, for_what) {
+      var _register, j, k, len, len1, m, methods, ref, results, results1;
+      if (for_what == null) {
+        for_what = "all";
+      }
+      if (!_.isArray(needs_list)) {
+        needs_list = [needs_list];
+      }
+      _register = (function(_this) {
+        return function(method_name, needs_list) {
+          return _this.requirements_list[method_name] = _this.requirements_list[method_name] != null ? _.union(_this.requirements_list[method_name], needs_list) : needs_list;
+        };
+      })(this);
+      if (_.isObject(for_what)) {
+        methods = for_what.except != null ? _.difference(this.public_methods, for_what.except) : for_what.only != null ? _.intersection(this.public_methods, for_what.only) : void 0;
+        results = [];
+        for (j = 0, len = methods.length; j < len; j++) {
+          m = methods[j];
+          results.push(_register(m, needs_list));
+        }
+        return results;
+      } else if (for_what === "all") {
+        ref = this.public_methods;
+        results1 = [];
+        for (k = 0, len1 = ref.length; k < len1; k++) {
+          m = ref[k];
+          results1.push(_register(m, needs_list));
+        }
+        return results1;
+      } else {
+        return _register(for_what, needs_list);
+      }
+    };
+
+    Controller.prototype.preload = function(for_method) {
+      if (this.requirements_list[for_method] == null) {
+        return true;
+      }
+      this.current_needs = this.requirements_list[for_method];
+      return this.load(this.current_needs.join(" "));
+    };
+
+    Controller.prototype["do"] = function(requested_method, prevent_render) {
+      this.requested_method = requested_method;
+      this.prevent_render = prevent_render != null ? prevent_render : true;
+      this.preload(this.requested_method);
+      if (this.has_needs_met()) {
+        if ((this[this.requested_method] != null) && _.indexOf(this.public_methods, this.requested_method) > -1) {
+          this[this.requested_method]();
+          if (!this.prevent_render) {
+            this.render();
+          }
+          true;
+        } else {
+          console.log("method not found or not public", this.name + "::" + this.requested_method);
+          this.do_404();
+        }
+      } else {
+        setTimeout((function(_this) {
+          return function() {
+            return _this["do"](_this.requested_method, _this.prevent_render);
+          };
+        })(this), 50);
+      }
+      return true;
+    };
+
+    Controller.prototype.do_404 = function() {
+      this.res.status(404);
+      return this.res.render('404', {
+        title: ' 404, man'
+      });
+    };
+
+    Controller.prototype.param = function(key) {
+      if (this.req.params.hasOwnProperty(key)) {
+        return this.req.params[key];
+      } else {
+        return false;
+      }
+    };
+
+    Controller.prototype.query = function(key) {
+      if (this.req.query.hasOwnProperty(key)) {
+        return this.req.query[key];
+      } else {
+        return false;
+      }
+    };
+
+    Controller.prototype.cookie = function(key) {
+      if (this.req.cookies && this.req.cookies.hasOwnProperty(key)) {
+        return this.req.cookies[key];
+      } else {
+        return false;
+      }
+    };
+
+    Controller.prototype.body = function(key) {
+      if (this.req.body && this.req.body.hasOwnProperty(key)) {
+        return this.req.body[key];
+      } else {
+        return false;
+      }
+    };
+
+    Controller.prototype.redirect = function(dest, status) {
+      if (status == null) {
+        status = 302;
+      }
+      return this.res.redirect(status, dest);
+    };
+
+    Controller.prototype.load = function(load_items) {
+      var i, j, len, ref;
+      if (this.loaded_items) {
+        ref = this.loaded_items;
+        for (j = 0, len = ref.length; j < len; j++) {
+          i = ref[j];
+          load_items = load_items.replace("" + i, "");
+        }
+        load_items = _str.trim(load_items.replace(/\s\s/g, ""));
+      } else {
+        this.loaded_items = [];
+      }
+      if (!load_items.length) {
+        return false;
+      }
+      return true;
+    };
+
+    Controller.prototype.loaded = function(item_name) {
+      this.loaded_items || (this.loaded_items = []);
+      return this.loaded_items.push(item_name);
+    };
+
+    Controller.prototype.has_needs_met = function() {
+      var has_everything, j, len, need, ref;
+      if (_.isEmpty(this.current_needs)) {
+        return true;
+      }
+      has_everything = true;
+      ref = this.current_needs;
+      for (j = 0, len = ref.length; j < len; j++) {
+        need = ref[j];
+        has_everything = has_everything && _.indexOf(this.loaded_items, need) > -1;
+      }
+      return has_everything;
+    };
+
+    Controller.prototype.json = function(obj) {
+      return this.res.json(obj);
+    };
+
+    Controller.prototype.render = function(view_name, data) {
+      if (view_name == null) {
+        view_name = null;
+      }
+      if (data == null) {
+        data = this.view_data;
+      }
+      if (!this.view_class) {
+        return false;
+      }
+      this.before_render();
+      if (this.cancel_render) {
+        return this.cancel_render = false;
+      }
+      this.view_data.view = !_.isEmpty(view_name) ? view_name : !_.isEmpty(this.view_to_render) ? this.view_to_render : this.requested_method;
+      this.current_view = new this.view_class(this.view_data, this.req, this.res, this.app);
+      this.current_view.render();
+      this.after_render();
+      this.cancel_render = false;
+      return this.current_view;
+    };
+
+    Controller.prototype.set_view = function(view_to_render) {
+      this.view_to_render = view_to_render;
+      return 1;
+    };
+
+    Controller.prototype.before_render = function() {
+      return 1;
+    };
+
+    Controller.prototype.after_render = function() {
+      return 1;
+    };
+
+    return Controller;
+
+  })();
+
+  BeatLab.App = (function(superClass) {
+    var express, fs, mongoose;
+
+    extend(App, superClass);
+
+    function App() {
+      return App.__super__.constructor.apply(this, arguments);
+    }
+
+    express = Requires.express, mongoose = Requires.mongoose, fs = Requires.fs;
+
+    App.init = function(opts) {
+      if (opts == null) {
+        opts = {};
+      }
+      return this.site = new BeatLab.App(_.extend({
+        app: express(),
+        mongoose: mongoose,
+        config: {
+          port: 3054,
+          title: "Kids on the beat, beat kids | BeatLab",
+          base_url: 'http://beatlab.io',
+          meta_keywords: '',
+          meta_description: '',
+          css_version: (new Date()).getTime(),
+          js_version: (new Date()).getTime()
+        },
+        opts: opts
+      }));
+    };
+
+    App.prototype.ready = function() {};
+
+    App.prototype.setup_routes = function() {
+      this.route("/", "home#index");
+      return this.route("/sitemap", "sitemap#index");
+    };
+
+    App.prototype.always_configure = function() {
+      var oneYear;
+      express = express;
+      oneYear = 31557600000;
+      this.app.set('port', process.env.PORT || this.conf("port"));
+      this.app.set('views', __dirname + '/views');
+      this.app.set('view engine', 'jade');
+      this.app.use(express.logger('dev'));
+      this.app.use(express.cookieParser());
+      this.app.use(express.bodyParser());
+      this.app.use(express.session({
+        secret: 'whateverb34tlabb3r'
+      }));
+      this.app.use(express.methodOverride());
+      this.app.use(express["static"](__dirname + "/public", {
+        maxAge: oneYear
+      }));
+      return this.app.use(this.app.router);
+    };
+
+    App.prototype.configure_for_development = function() {
+      this.app.use(express.errorHandler());
+      return this.app.locals.pretty = true;
+    };
+
+    App.prototype.configure_for_production = function() {};
+
+    App.prototype.before_ready = function() {};
+
+    return App;
+
+  })(App);
+
+  BeatLab.Query = (function() {
+    function Query() {}
+
+    return Query;
+
+  })();
+
+  BeatLab.Controller = (function(superClass) {
+    extend(Controller, superClass);
+
+    function Controller() {
+      return Controller.__super__.constructor.apply(this, arguments);
+    }
+
+    return Controller;
+
+  })(App.Controller);
+
+  BeatLab.HomeView = (function(superClass) {
+    extend(HomeView, superClass);
+
+    function HomeView() {
+      return HomeView.__super__.constructor.apply(this, arguments);
+    }
+
+    HomeView.prototype.js_block = function() {
+      return "World.Home.init(\"#" + this.data.auto_generated_id + "\", " + (JSON.stringify(this.data.js_opts)) + ");";
+    };
+
+    return HomeView;
+
+  })(App.View);
+
+  App.SitemapController = (function(superClass) {
+    extend(SitemapController, superClass);
+
+    function SitemapController() {
+      return SitemapController.__super__.constructor.apply(this, arguments);
+    }
+
+    SitemapController.prototype.name = "SitemapController";
+
+    SitemapController.prototype.setup = function() {
+      this.public_methods = ["index"];
+      this.requires("sitemap_urls");
+      return SitemapController.__super__.setup.apply(this, arguments);
+    };
+
+    SitemapController.prototype.load = function() {
+      var j, len, url, urls;
+      urls = ["/"];
+      this.sitemap_urls = [];
+      for (j = 0, len = urls.length; j < len; j++) {
+        url = urls[j];
+        this.sitemap_urls.push(App.base_url(url, true));
+      }
+      return this.loaded("sitemap_urls");
+    };
+
+    SitemapController.prototype.index = function() {
+      this.res.header('Content-type', 'text/plain');
+      this.res.end(_.uniq(this.sitemap_urls).join("\n"));
+    };
+
+    return SitemapController;
+
+  })(App.Controller);
+
+  App.HomeController = (function(superClass) {
+    var query;
+
+    extend(HomeController, superClass);
+
+    function HomeController() {
+      return HomeController.__super__.constructor.apply(this, arguments);
+    }
+
+    Requires;
+
+    query = BeatLab.Query;
+
+    HomeController.prototype.name = "HomeController";
+
+    HomeController.prototype.view_class = BeatLab.HomeView;
+
+    HomeController.prototype.setup = function() {
+      this.public_methods = ["index"];
+      this.requires("tracks", "index");
+      return HomeController.__super__.setup.apply(this, arguments);
+    };
+
+    HomeController.prototype.load = function(load_what) {
+      if (!HomeController.__super__.load.apply(this, arguments)) {
+        return;
+      }
+      if (load_what.indexOf("tracks") > -1) {
+        this.load_tracks();
+        return this.loaded("tracks");
+      }
+    };
+
+    HomeController.prototype.load_tracks = function() {
+      var track;
+      track = function(filename, title) {
+        var type;
+        if (title == null) {
+          title = filename;
+        }
+        type = filename.substr(filename.indexOf("."));
+        return {
+          source: "/beats/" + filename,
+          title: title,
+          type: type
+        };
+      };
+      return this.tracks = [track("morningbeat093015.wav", "Morning Beat 9/30/15"), track("eveningbeat092815.wav", "Evening Beat 9/28/15"), track("morningbeat092815.wav", "Morning Beat 9/28/15")];
+    };
+
+    HomeController.prototype.index = function() {
+      this.view_data.tracks = this.tracks;
+      return this.render("index");
+    };
+
+    return HomeController;
+
+  })(BeatLab.Controller);
+
+  App.init({}, BeatLab.App);
+
+}).call(this);

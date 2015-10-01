@@ -1,5 +1,5 @@
 class App.Router
-  @debug: false
+  @debug: true 
   constructor: (@app, @opts={}) ->
     if !@app
       throw new Error("an app is required to create a Router")
