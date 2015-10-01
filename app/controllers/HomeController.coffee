@@ -22,7 +22,7 @@ class App.HomeController extends BeatLab.Controller
       if !title?
         title = filename
 
-      type = filename.substr(filename.indexOf("."))
+      type = filename.substr(filename.indexOf(".") + 1)
 
       {
         source: "/beats/#{filename}" 
