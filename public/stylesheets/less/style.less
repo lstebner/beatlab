@@ -1,0 +1,39 @@
+@import "variables";
+
+body{
+    margin:0;
+
+    &.no_scroll{
+      overflow: hidden;
+    }
+}
+
+.transition(@t){
+    transition: @t;
+    -webkit-transition: @t;
+    -moz-transition: @t;
+}
+
+:focus{
+    outline: none !important;
+}
+
+::-webkit-input-placeholder {
+   color: @placeholder_color;
+}
+
+:-moz-placeholder {
+   color: @placeholder_color;
+}
+
+:-ms-input-placeholder {
+   color: @placeholder_color;
+}
+
+@import "mixins";
+@import "overlay";
+@import "media_queries";
+
+
+
+

@@ -1,0 +1,38 @@
+body {
+  margin: 0;
+}
+body.no_scroll {
+  overflow: hidden;
+}
+:focus {
+  outline: none !important;
+}
+::-webkit-input-placeholder {
+  color: #d8d8d8;
+}
+:-moz-placeholder {
+  color: #d8d8d8;
+}
+:-ms-input-placeholder {
+  color: #d8d8d8;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+}
+.overlay .close {
+  position: absolute;
+  right: 30px;
+  top: 20px;
+  color: #d8d8d8;
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: 100;
+  font-family: sans-serif;
+}

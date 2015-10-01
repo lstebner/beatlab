@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title= title
+    meta(name="title", value=title)
+    meta(name="keywords", value="web developer, javascript, html, css, freelancer, contractor, php, san francisco, bay area")
+    meta(name="description", value="I am a Web Developer located in the Bay Area available for hire to build your custom website, or help with an existing project. Check out my work!")
+    link(href='http://fonts.googleapis.com/css?family=Dosis:200,300,400', rel='stylesheet', type='text/css')
+    link(rel='stylesheet', href='/stylesheets/css/style.css')
+
+    if process.env.NODE_ENV == 'production'
+        script(type="text/javascript", src="/javascripts/analytics.js")
+  body
+    h1 404! 
+    p sorry for this ugly 404 page, I'll fix it lataaaa.

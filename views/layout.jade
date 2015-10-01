@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    title= title
+    meta(name="title", value=title)
+    meta(name="keywords", value="")
+    meta(name="description", value="")
+    link(rel='stylesheet', href='/stylesheets/css/style.css')
+
+    script(type="text/javascript", src="/javascripts/min/main-min.js")
+    script(type="text/javascript", src="/javascripts/coffee/main.js")
+
+    if process.env.NODE_ENV == 'production'
+        script(type="text/javascript", src="/javascripts/analytics.js")
+  body
+    div(id=auto_generated_id)
+        block content
+
+    if compiled_js
+        script(type="text/javascript", id="compiled_js_block").
+            $(function(){
+                !{compiled_js}
+            });

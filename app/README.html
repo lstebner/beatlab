@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+</head>
+<body>
+<h1 id="applicationhowtos">Application Howto&#8217;s</h1>
+
+<p>There is a lot of things provided in the &#8220;app&#8221; here so I will attempt to explain them all for reference. Mostly as a list of how to&#8217;s for things such as adding new views or data models. </p>
+
+<h2 id="initialsetup">Initial Setup</h2>
+
+<p>The first thing you&#8217;ll probably have to do is the initial setup. This involves mostly file naming and a few edits within files or removal of things you don&#8217;t want. </p>
+
+<h3 id="createanewgitignorefile">Create a new &#8220;gitignore&#8221; file</h3>
+
+<p>Ignore:
+- .gitignore
+- <em>.codekit
+- </em>.conf
+- .DS_Store</p>
+
+<h3 id="files">Files</h3>
+
+<ul>
+<li><p>/app folder: The root app folder. You&#8217;ll want to add/remove from the helpers, controllers and views folders as meets the needs for your app. </p></li>
+<li><p>[your_app_name].coffee: This should define your custom App. I typically also define a Query object and custom base Controller though these could be in separate files if you want. </p></li>
+<li><p>app.coffee: Append your custom app file here and pass it into the App.init</p></li>
+<li><p>declaration.coffee: Create your base object in here. This is kinda lame, but due to how Codekit does file append/prepend it ensures this object exists at the beginning.</p></li>
+<li><p>/app/conf: Update the settings in these files to reflect your app</p></li>
+<li><p>/app/public/includes: There are some basic resources available you can include from here</p></li>
+</ul>
+
+</body>
+</html>
