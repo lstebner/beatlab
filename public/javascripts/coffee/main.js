@@ -217,7 +217,6 @@
 
     Home.prototype.before_setup = function() {
       this.tracks_data = JSON.parse($(".tracks_data").text());
-      console.log(this.tracks_data);
       return this.player = new BeatLab.Player(this.container.find(".beatlab_player"), {
         playlist: this.tracks_data
       });

@@ -16,7 +16,7 @@ collections cannot be defined within collections.
 
 collections can be bulk hidden by passing `hide: true` to the collection block
 
-collection: Boombastic Hits, dir: "boombastic_hits"
+collection: Boombastic Hits, dir: boombastic_hits
   01 boombastic beat 1.wav, Boom beat 1, ...
   02 boombastic beat 2.wav, Boom beat 2, ...
 end
@@ -24,12 +24,12 @@ end
 ---
 file_path, title, collection, tags, version, created_on, last_updated_on
 collection do name: Headhunters, dir: headhunters
-  headhunters/01 morningbeat111115_5.wav, Morning Beat 11/11/15, Headhunters, [one, two, three and four as one, not two]
-  headhunters/02 morningbeat112515_3.wav, Morning Beat 11/25/15, Headhunters 
-  headhunters/03 morningbeat120115_4.wav, Morning Beat 12/01/15, Headhunters 
+  headhunters/01 morningbeat111115_5.wav, Morning Beat 11/11/15, [one, two, three and four as one, not two]
+  headhunters/02 morningbeat112515_3.wav, Morning Beat 11/25/15  
+  headhunters/03 morningbeat120115_4.wav, Morning Beat 12/01/15  
+  headhunters/04 morningbeat112015_7.wav, Morning Beat 11/20/15 
+  headhunters/05 morningbeat120315_4.wav, Morning Beat 12/03/15 
+  headhunters/06 morningbeat112115_6.wav, Morning Beat 11/21/15 
+  headhunters/07 morningbeat102815_5.wav, Morning Beat 10/28/15 
 end
 
-headhunters/04 morningbeat112015_7.wav, Morning Beat 11/20/15, Headhunters
-headhunters/05 morningbeat120315_4.wav, Morning Beat 12/03/15, Headhunters
-headhunters/06 morningbeat112115_6.wav, Morning Beat 11/21/15, Headhunters
-headhunters/07 morningbeat102815_5.wav, Morning Beat 10/28/15, Headhunters

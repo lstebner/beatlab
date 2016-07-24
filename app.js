@@ -852,10 +852,11 @@
     };
 
     BeatsData.prototype.store_beat = function(line) {
-      var beat_data, i, idx, j, l, len, len1, len2, m, match, matched_lists, matches, n, piece, ref;
+      var beat_data, data_keys, i, idx, j, l, len, len1, len2, m, match, matched_lists, matches, n, piece, ref;
       line = line.trim();
       beat_data = this.default_beat_data_clone();
       matched_lists = line.match(/\[([a-zA-Z,\s]+)\]/);
+      data_keys = this.processing_block === "collection" ? _.without(this._data_keys, "collection") : void 0;
       if (matched_lists != null) {
         for (i = j = 0, len = matched_lists.length; j < len; i = ++j) {
           match = matched_lists[i];
@@ -878,7 +879,7 @@
             piece = matched_lists[idx];
           }
         }
-        beat_data[this._data_keys[i]] = piece;
+        beat_data[data_keys[i]] = piece;
       }
       beat_data.source = this.config.use_s3 ? "" + this.config.s3_path + beat_data.file_path : "" + this.config.beat_root_path + beat_data.file_path;
       beat_data.type = beat_data.file_path.substr(beat_data.file_path.lastIndexOf(".") + 1);

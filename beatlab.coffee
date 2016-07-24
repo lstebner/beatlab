@@ -124,6 +124,9 @@ class BeatsData
     line = line.trim()
     beat_data = @default_beat_data_clone()
     matched_lists = line.match(/\[([a-zA-Z,\s]+)\]/)
+    data_keys = if @processing_block == "collection"
+      _.without @_data_keys, "collection" 
+
     if matched_lists?
       for match, i in matched_lists
         matches = match.replace(/[\[|\]]/g, "").split(",")
@@ -141,7 +144,7 @@ class BeatsData
         if matched_lists[idx]?
           piece = matched_lists[idx]
 
-      beat_data[@_data_keys[i]] = piece
+      beat_data[data_keys[i]] = piece
 
     # generated properties
     beat_data.source = if @config.use_s3
