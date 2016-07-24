@@ -7,7 +7,7 @@ __log = (args...) ->
   console.log(args...) unless HUSH_LOG 
 
 fs = require("fs")
-beats_data_raw = fs.readFileSync("./beats_data.txt", "UTF-8")
+beats_data_raw = fs.readFileSync("./beats_data.txt", "UTF-8").trim()
 
 class BeatsData
   constructor: (@file_contents, config={}) ->

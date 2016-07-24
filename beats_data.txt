@@ -22,9 +22,11 @@ collection: Boombastic Hits, dir: boombastic_hits
 end
 
 ---
+# ordered keys, not all are required but they must be in order
 file_path, title, collection, tags, version, created_on, last_updated_on
+
 collection do name: Headhunters, dir: headhunters
-  headhunters/01 morningbeat111115_5.wav, Morning Beat 11/11/15, [one, two, three and four as one, not two]
+  headhunters/01 morningbeat111115_5.wav, Morning Beat 11/11/15
   headhunters/02 morningbeat112515_3.wav, Morning Beat 11/25/15  
   headhunters/03 morningbeat120115_4.wav, Morning Beat 12/01/15  
   headhunters/04 morningbeat112015_7.wav, Morning Beat 11/20/15 
@@ -32,4 +34,13 @@ collection do name: Headhunters, dir: headhunters
   headhunters/06 morningbeat112115_6.wav, Morning Beat 11/21/15 
   headhunters/07 morningbeat102815_5.wav, Morning Beat 10/28/15 
 end
+
+
+
+
+
+
+
+
+
 

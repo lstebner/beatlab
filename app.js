@@ -691,7 +691,7 @@
 
   fs = require("fs");
 
-  beats_data_raw = fs.readFileSync("./beats_data.txt", "UTF-8");
+  beats_data_raw = fs.readFileSync("./beats_data.txt", "UTF-8").trim();
 
   BeatsData = (function() {
     function BeatsData(file_contents, config) {
