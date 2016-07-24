@@ -7,7 +7,7 @@ class App.View
   default_data: ->
     @data = _.extend
       layout: true
-      title: App.conf "site_name"
+      title: App.conf "title"
       site_name: App.conf "site_name"
       meta:
         keywords: App.conf "site_keywords"
@@ -18,13 +18,8 @@ class App.View
       disqus_shortname: App.conf("disqus_shortname")
       cookies: null
       body_class: ''
-      single_upload_view: false
       this_url: @req.url
-      pagination_data: {}
-      uploads_filter: {}
-      load_more: true
       display_comments: false
-      no_uploads_message: false
       css_version: App.conf("css_version")
       js_version: App.conf("js_version")
       base_url: App.base_url()

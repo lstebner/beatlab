@@ -35,8 +35,12 @@ body{
 @import "overlay";
 @import "media_queries";
 
-h1{
+h1, h2, h3, h4, h5, h6, form, p{
   margin: 0;
+}
+
+a{
+  text-decoration: none;
 }
 
 .track{
@@ -46,6 +50,41 @@ h1{
     margin-bottom: 6px;
   }
 }
+
+.player_container{
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.track_meta{
+  .title{
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+}
+
+.playlist{
+  font-size: 14px;
+
+  .track{
+    &.selected{
+      font-weight: bold;
+      border-left: 2px solid #0f0;
+      padding-left: 4px;
+    }
+  }
+}
+
+
+
+
+
+
+
+
 
 
 

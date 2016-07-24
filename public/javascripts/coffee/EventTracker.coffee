@@ -30,4 +30,4 @@ class EventTracker
         @track_event Events[key]
 
 $ ->
-    World.event_tracker = new EventTracker(1)
+    BeatLab.event_tracker = new EventTracker(1)

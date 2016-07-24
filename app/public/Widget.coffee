@@ -1,4 +1,4 @@
-class World.Widget
+class BeatLab.Widget
   @init: (id, opts={}) ->
     @_instances ||= []
     @_instances.push new @ id, opts

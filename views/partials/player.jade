@@ -1,3 +1,17 @@
-audio(controls)
-    source(src=track.source, type="audio/#{track.type}")
-    | Your browse does not support the audio element
+.beatlab_player
+    .player_container
+        .track_meta
+            .title
+
+        audio.player(controls)
+            source(src="", type="audio/wav")
+
+            | Your browser does not support the audio element
+
+    .playlist
+        for track, i in tracks
+            div.track
+                a(href="#", data-source=track.source, data-idx=i).select_track_btn= track.title
+
+    .tracks_data(style="display:none;")= JSON.stringify(tracks)
+
