@@ -775,7 +775,6 @@
     };
 
     BeatsData.prototype.process_line = function(line) {
-      var base;
       line = line.trim();
       if (!line.length) {
         return false;
@@ -790,11 +789,28 @@
           return this.store_beat(line);
         } else {
           if (this.processing_block === "collection") {
-            (base = this.this_block_meta).beat_refs || (base.beat_refs = []);
-            return this.this_block_meta.beat_refs.push(line);
+            return this.add_beat_to_collection_by_ref(line);
           }
         }
       }
+    };
+
+    BeatsData.prototype.add_beat_to_collection_by_ref = function(ref) {
+      var beat, beat_id;
+      beat = this.get_beat_from_ref(ref);
+      console.log("add beat to current coll", ref, beat, this.this_block_meta);
+      if (!beat) {
+        return false;
+      }
+      console.log("before>>>> ", beat);
+      this.this_block_meta.beat_refs.push(ref);
+      beat_id = this._beat_refs[ref];
+      beat.collection = this.this_block_meta.name;
+      beat.file_path = "" + this.this_block_meta.dir + beat.file_path;
+      beat.source = this._config.use_s3 ? "" + this._config.s3_path + beat.file_path : "" + this._config.beat_root_path + beat.file_path;
+      console.log("====beater || " + beat.file_path);
+      console.log(">>>>>>>>>>", beat_id, beat, this._all_beats[beat_id]);
+      return this._all_beats[beat_id] = beat;
     };
 
     BeatsData.prototype.store_data_keys = function(line) {
@@ -1204,7 +1220,7 @@
 
     Requires;
 
-    query = new BeatLab.Query();
+    query = new BeatLab.Query(beats_data);
 
     HomeController.prototype.name = "HomeController";
 
@@ -1245,8 +1261,7 @@
           playlist: playlist
         };
       };
-      this.tracks = query.get_beats_for_collection("Headhunters").beats;
-      return console.log("da beats", this.tracks);
+      return this.tracks = query.get_beats_for_collection("Headhunters");
     };
 
     HomeController.prototype.index = function() {

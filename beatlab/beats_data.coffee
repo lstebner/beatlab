@@ -85,8 +85,21 @@ class BeatsData
       # a beat reference
       else
         if @processing_block == "collection"
-          @this_block_meta.beat_refs ||= []
-          @this_block_meta.beat_refs.push line
+          @add_beat_to_collection_by_ref line
+
+  add_beat_to_collection_by_ref: (ref) ->
+    beat = @get_beat_from_ref ref
+    return false unless beat
+
+    @this_block_meta.beat_refs.push ref 
+    beat_id = @_beat_refs[ref]
+    beat.collection = @this_block_meta.name
+    beat.file_path = "#{@this_block_meta.dir}#{beat.file_path}"
+    beat.source = if @_config.use_s3
+      "#{@_config.s3_path}#{beat.file_path}"
+    else
+      "#{@_config.beat_root_path}#{beat.file_path}"
+    @_all_beats[beat_id] = beat
 
   store_data_keys: (line) ->
     unless typeof line == "string"
