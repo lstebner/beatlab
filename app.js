@@ -1046,6 +1046,8 @@
       }
       if (q.tags) {
         return this.get_beats_tagged(q.tags);
+      } else if (q.collection) {
+        return this.get_beats_for_collection(q.collection);
       } else {
         return this.get_all_beats();
       }
@@ -1257,7 +1259,7 @@
           playlist: playlist
         };
       };
-      return this.tracks = query.get_beats_for_collection("Headhunters");
+      return this.tracks = query.get_beats();
     };
 
     HomeController.prototype.index = function() {

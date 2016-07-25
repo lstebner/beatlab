@@ -5,6 +5,7 @@ file_path, title, tags
 $morningbeat111115, 01 morningbeat111115_5.wav, Morning Beat 11/11/15, [chill, unmastered]
 $morningbeat112515, 02 morningbeat112515_3.wav, Morning Beat 11/25/15, [chill, hop hop, instrumental]
 $morningbeat120115, 03 morningbeat120115_4.wav, Morning Beat 12/01/15, [instrumental]
+
 collection do name: soft beats
   $morningbeat011516, morningbeat011516_4.wav, Morning beat 01/15/16, [freestyle, instrumental, samples]
   $morningbeat011816, morningbeat011816_3.wav, Morning beat 01/18/16, [scary, themed]
@@ -27,6 +28,10 @@ end
     it "returns all beats matching any tag", ->
       beats = query.get_beats tags: ["chill", "instrumental"]
       expect(beats.length).to.be(4)
+
+    it "returns all beats in a given collection", ->
+      beats = query.get_beats collection: "soft beats"
+      expect(beats.length).to.be(2)
 
   describe "#get_all_beats", ->
     it "returns all beats", ->

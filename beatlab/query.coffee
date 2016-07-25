@@ -6,6 +6,8 @@ class BeatLab.Query
   get_beats: (q={}) ->
     if q.tags
       @get_beats_tagged q.tags
+    else if q.collection
+      @get_beats_for_collection q.collection
     else
       @get_all_beats()
   

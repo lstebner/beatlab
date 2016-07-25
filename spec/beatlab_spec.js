@@ -305,6 +305,8 @@
       }
       if (q.tags) {
         return this.get_beats_tagged(q.tags);
+      } else if (q.collection) {
+        return this.get_beats_for_collection(q.collection);
       } else {
         return this.get_all_beats();
       }
@@ -645,7 +647,7 @@
 
   describe("BeatLab.Query", function() {
     var beats_data, beats_data_raw, num_beats, query;
-    beats_data_raw = "---\nfile_path, title, tags\n$morningbeat111115, 01 morningbeat111115_5.wav, Morning Beat 11/11/15, [chill, unmastered]\n$morningbeat112515, 02 morningbeat112515_3.wav, Morning Beat 11/25/15, [chill, hop hop, instrumental]\n$morningbeat120115, 03 morningbeat120115_4.wav, Morning Beat 12/01/15, [instrumental]\ncollection do name: soft beats\n  $morningbeat011516, morningbeat011516_4.wav, Morning beat 01/15/16, [freestyle, instrumental, samples]\n  $morningbeat011816, morningbeat011816_3.wav, Morning beat 01/18/16, [scary, themed]\nend";
+    beats_data_raw = "---\nfile_path, title, tags\n$morningbeat111115, 01 morningbeat111115_5.wav, Morning Beat 11/11/15, [chill, unmastered]\n$morningbeat112515, 02 morningbeat112515_3.wav, Morning Beat 11/25/15, [chill, hop hop, instrumental]\n$morningbeat120115, 03 morningbeat120115_4.wav, Morning Beat 12/01/15, [instrumental]\n\ncollection do name: soft beats\n  $morningbeat011516, morningbeat011516_4.wav, Morning beat 01/15/16, [freestyle, instrumental, samples]\n  $morningbeat011816, morningbeat011816_3.wav, Morning beat 01/18/16, [scary, themed]\nend";
     beats_data = new BeatsData(beats_data_raw);
     query = new BeatLab.Query(beats_data);
     num_beats = 5;
@@ -662,12 +664,19 @@
         });
         return expect(beats.length).to.be(2);
       });
-      return it("returns all beats matching any tag", function() {
+      it("returns all beats matching any tag", function() {
         var beats;
         beats = query.get_beats({
           tags: ["chill", "instrumental"]
         });
         return expect(beats.length).to.be(4);
+      });
+      return it("returns all beats in a given collection", function() {
+        var beats;
+        beats = query.get_beats({
+          collection: "soft beats"
+        });
+        return expect(beats.length).to.be(2);
       });
     });
     describe("#get_all_beats", function() {
