@@ -1020,8 +1020,12 @@
 
   })(App);
 
+  BeatLab = BeatLab || {};
+
   BeatLab.Query = (function() {
-    function Query() {}
+    function Query(beats_data1) {
+      this.beats_data = beats_data1;
+    }
 
     Query.prototype.get_beats = function(q) {
       if (q == null) {
@@ -1035,56 +1039,76 @@
     };
 
     Query.prototype.get_all_beats = function() {
-      return beats_data._all_beats;
+      return this.beats_data._all_beats;
     };
 
-    Query.prototype.get_beats_tagged = function(tags) {
-      var beat, found, j, l, len, len1, ref1, t, this_matched;
+    Query.prototype.get_beats_tagged = function(tags, match_all) {
+      var beat, found, j, l, len, len1, ref1, should_add, t, this_matched;
       if (tags == null) {
         tags = [];
+      }
+      if (match_all == null) {
+        match_all = false;
       }
       if (typeof tags === "string") {
         tags = [tags];
       }
       found = [];
-      ref1 = beats_data._all_beats;
+      ref1 = this.beats_data._all_beats;
       for (j = 0, len = ref1.length; j < len; j++) {
         beat = ref1[j];
-        this_matched = false;
+        this_matched = 0;
         for (l = 0, len1 = tags.length; l < len1; l++) {
           t = tags[l];
-          if (!this_matched && beat.tags.indexOf(t)) {
-            this_matched = true;
-            found.push(beat);
+          if (beat.tags.indexOf(t) > -1) {
+            this_matched++;
           }
+        }
+        should_add = (match_all && this_matched === tags.length) || (!match_all && this_matched);
+        if (should_add) {
+          found.push(beat);
         }
       }
       return found;
     };
 
-    Query.prototype.get_beats_in_collection = function(collection) {
-      var beat, c, coll, collections, found, j, l, len, len1, ref1;
+    Query.prototype.get_beats_for_collection = function(collection) {
+      var beat, found, j, len, ref, ref1;
+      if (typeof collection === "string") {
+        collection = this.get_collection(collection, false);
+        console.log("beats for", collection, typeof collection);
+        if (collection == null) {
+          console.log("ERROR get_beats_for_collection could not find collection");
+          return [];
+        }
+      }
       found = [];
-      collections = beats_data.get_blocks("collection");
+      ref1 = collection.beat_refs;
+      for (j = 0, len = ref1.length; j < len; j++) {
+        ref = ref1[j];
+        if (beat = this.beats_data.get_beat_from_ref(ref)) {
+          found.push(beat);
+        }
+      }
+      return found;
+    };
+
+    Query.prototype.get_collection = function(collection, include_beats) {
+      var c, coll, j, len, ref1;
+      if (include_beats == null) {
+        include_beats = false;
+      }
       coll = null;
-      for (j = 0, len = collections.length; j < len; j++) {
-        c = collections[j];
+      ref1 = this.beats_data.get_blocks("collection");
+      for (j = 0, len = ref1.length; j < len; j++) {
+        c = ref1[j];
         if (c.name === collection) {
           coll = _.clone(c);
         }
       }
-      if (coll == null) {
-        console.log("error finding collection '" + collection + "' in " + (JSON.stringify(collections)));
-        return [];
+      if (include_beats) {
+        coll.beats = this.get_beats_for_collection(coll);
       }
-      ref1 = beats_data._all_beats;
-      for (l = 0, len1 = ref1.length; l < len1; l++) {
-        beat = ref1[l];
-        if (beat.collection === collection) {
-          found.push(beat);
-        }
-      }
-      coll.beats = found;
       return coll;
     };
 
@@ -1221,7 +1245,7 @@
           playlist: playlist
         };
       };
-      this.tracks = query.get_beats_in_collection("Headhunters").beats;
+      this.tracks = query.get_beats_for_collection("Headhunters").beats;
       return console.log("da beats", this.tracks);
     };
 

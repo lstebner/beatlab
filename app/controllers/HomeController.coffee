@@ -33,7 +33,7 @@ class App.HomeController extends BeatLab.Controller
         playlist: playlist
       }
 
-    @tracks = query.get_beats_in_collection("Headhunters").beats
+    @tracks = query.get_beats_for_collection("Headhunters").beats
     console.log "da beats", @tracks
 
     # @tracks = [

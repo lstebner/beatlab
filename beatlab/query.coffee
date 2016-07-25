@@ -1,4 +1,8 @@
+BeatLab = BeatLab || {}
+
 class BeatLab.Query
+  constructor: (@beats_data) ->
+
   get_beats: (q={}) ->
     if q.tags
       @get_beats_tagged q.tags
@@ -6,39 +10,50 @@ class BeatLab.Query
       @get_all_beats()
   
   get_all_beats: ->
-    beats_data._all_beats
+    @beats_data._all_beats
 
-  get_beats_tagged: (tags=[]) ->
+  get_beats_tagged: (tags=[], match_all=false) ->
     if typeof tags == "string"
       tags = [tags]
 
     found = []
 
-    for beat in beats_data._all_beats
-      this_matched = false
+    for beat in @beats_data._all_beats
+      this_matched = 0
       for t in tags
-        if !this_matched && beat.tags.indexOf(t)
-          this_matched = true
-          found.push beat
+        if beat.tags.indexOf(t) > -1
+          this_matched++
+
+      should_add = (match_all && this_matched == tags.length) || (!match_all && this_matched)
+
+      if should_add
+        found.push beat
 
     found
 
-  get_beats_in_collection: (collection) ->
-    found = []
-    collections = beats_data.get_blocks("collection")
-    coll = null 
+  get_beats_for_collection: (collection) ->
+    if typeof collection == "string"
+      collection = @get_collection collection, false
+      console.log "beats for", collection, typeof(collection)
+      unless collection?
+        console.log "ERROR get_beats_for_collection could not find collection"
+        return []
 
-    for c in collections
+    found = []
+    for ref in collection.beat_refs
+      if beat = @beats_data.get_beat_from_ref(ref)
+        found.push beat
+
+    found
+
+  get_collection: (collection, include_beats=false) ->
+    coll = null
+    for c in @beats_data.get_blocks("collection")
       if c.name == collection
         coll = _.clone c
 
-    unless coll?
-      console.log "error finding collection '#{collection}' in #{JSON.stringify collections}"
-      return [] 
+    if include_beats
+      coll.beats = @get_beats_for_collection coll
 
-    for beat in beats_data._all_beats
-      if beat.collection == collection
-        found.push beat
-
-    coll.beats = found
     coll
+
