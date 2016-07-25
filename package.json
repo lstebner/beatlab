@@ -10,6 +10,8 @@
     "jade": "*",
     "underscore": "*",
     "underscore.string": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "expect.js": "*",
+    "mocha": "*"
   }
 }
