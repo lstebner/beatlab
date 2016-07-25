@@ -1,1 +1,5 @@
-# @codekit-prepend "../../app"
+_ = require("underscore")
+
+__log = ->
+
+# @codekit-prepend "../../beatlab/beats_data"
