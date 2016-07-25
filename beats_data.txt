@@ -26,26 +26,145 @@ collection: Boombastic Hits, dir: boombastic_hits
   $boombastic2
 end
 
+eveningbeat072116.wav
+morningbeat070616.wav
+morningbeat070616_1.wav
+morningbeat071116.wav
+morningbeat071116tracks
+morningbeat071416.wav
+mornngbeat072116.wav
+
+eveningbeat062016.wav
+eveningjam062716.wav
+morningbeat060116.wav
+morningbeat060116_1.wav
+morningbeat060816.wav
+morningbeat060816_2.wav
+morningbeat060916 (1).wav
+morningbeat060916.wav
+morningbeat061016.wav
+morningbeat061016loop.wav
+morningbeat061216.logicx
+
+Tabletop.wav
+morningbeat050216.wav
+morningbeat050216_2.wav
+morningbeat050216_3.wav
+morningbeat050216_4.wav
+morningbeat050916.wav
+morningbeat050916_2.wav
+morningbeat051216.wav
+morningbeat051216_2.wav
+morningbeat051616.wav
+morningbeat051616_2.wav
+morningbeat051616_3.wav
+morningbeat051616_4.wav
+morningbeat051616_5 (1).wav
+morningbeat051616_5 (2).wav
+morningbeat051616_5.wav
+morningbeat051616_6.wav
+morningbeat051916.wav
+morningbeat051916_2.wav
+morningbeat051916_3.wav
+morningbeat052916.wav
+morningbeat052916_2.wav
+morningbeat052916_3.wav
+morningbeat052916_4.wav
+
+eveningbeat042416.wav
+eveningbeat042416_2.wav
+eveningbeat042616.wav
+eveningbeat042616_2.wav
+morningbeat040116.wav
+morningbeat042016.wav
+morningbeat042016_2.wav
+morningbeat042016_3.wav
+morningbeat042016_4.wav
+smoothhop004.wav
+smoothhop004_2.wav
+smoothhop004_3.wav
+smoothhop004_4.wav
+smoothhop005.wav
+
+morningbeat030616.wav
+morningbeat030616_2.wav
+morningbeat030616_3.wav
+morningbeat030616_4.wav
+morningbeat030616_5.wav
+morningbeat030616_6.wav
+morningbeat030916.wav
+morningbeat030916_2.wav
+morningbeat030916_3.wav
+morningbeat030916_4.wav
+morningbeat030916_5.wav
+morningbeat031616.wav
+morningbeat031616_2.wav
+morningbeat031616_3.wav
+morningbeat032416.wav
+morningbeat032416_2.wav
+smoothhop001.wav
+
+morningbeat021716 (1).wav
+morningbeat021716.bm2
+morningbeat021716.wav
+morningbeat021716_3.wav
+morningbeat021716_4.wav
+morningbeat021716_5.wav
+morningbeat021716_6.wav
+morningbeat021716i.bm2
+morningbeat022616.bm2
+morningbeat022616.wav
+morningbeat022916.bm2
+morningbeat022916.wav
+morningbeat022916_2.wav
+morningbeat022916_3.wav
+morningbeat022916_4.wav
+morningbeat022916_5.wav
+morningbeat022916_6.wav
+morningbeat022916_7.wav
+morningbeat022916_8.wav
+morningbeat022916_8bassredo.wav
+nightbeat020216.bm2
+nightbeat020416.bm2
+
+eveningbeat011916.wav
+eveningbeat011916_2.wav
+eveningbeat011916_3.wav
+eveningbeat011916b.bm2
+eveningbeat012616.wav
+morningbeat011716.wav
+morningbeat012216.wav
+morningbeat012216_2.wav
+morningbeat012216_4 (1).wav
+morningbeat012216_4.wav
+morningbeat012216_5.wav
+planebeat013016_2.wav
+planebeat013016_3.wav
+planebeat013016_4.wav
+planebeat013016_5.wav
+planebeat013016_6.wav
+
 ---
 # ordered keys, not all are required but they must be in order
 file_path, title, collection, tags, version, created_on, last_updated_on
 
-$morningbeat111115, 01 morningbeat111115_5.wav, Morning Beat 11/11/15
-$morningbeat112515, 02 morningbeat112515_3.wav, Morning Beat 11/25/15  
-$morningbeat120115, 03 morningbeat120115_4.wav, Morning Beat 12/01/15  
-$morningbeat112015, 04 morningbeat112015_7.wav, Morning Beat 11/20/15 
-$morningbeat120315, 05 morningbeat120315_4.wav, Morning Beat 12/03/15 
-$morningbeat112115, 06 morningbeat112115_6.wav, Morning Beat 11/21/15 
-$morningbeat102815, 07 morningbeat102815_5.wav, Morning Beat 10/28/15 
+$mb111115, 01 morningbeat111115_5.wav, Morning Beat 11/11/15
+$mb112515, 02 morningbeat112515_3.wav, Morning Beat 11/25/15  
+$mb120115, 03 morningbeat120115_4.wav, Morning Beat 12/01/15  
+$mb112015, 04 morningbeat112015_7.wav, Morning Beat 11/20/15 
+$mb120315, 05 morningbeat120315_4.wav, Morning Beat 12/03/15 
+$mb112115, 06 morningbeat112115_6.wav, Morning Beat 11/21/15 
+$mb102815, 07 morningbeat102815_5.wav, Morning Beat 10/28/15 
 
-collection do name: Headhunters, dir: headhunters
-  $morningbeat111115
-  $morningbeat112515
-  $morningbeat120115
-  $morningbeat112015
-  $morningbeat112115
-  $morningbeat102815
+collection do name: Headhunters, dir: headhunters/
+  $mb111115
+  $mb112515
+  $mb120115
+  $mb112015
+  $mb112115
+  $mb102815
 end
+
 
 
 

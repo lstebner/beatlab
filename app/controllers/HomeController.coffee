@@ -1,6 +1,6 @@
 class App.HomeController extends BeatLab.Controller
   {} = Requires
-  query = new BeatLab.Query()
+  query = new BeatLab.Query(beats_data)
 
   name: "HomeController"
   view_class: BeatLab.HomeView
@@ -33,8 +33,8 @@ class App.HomeController extends BeatLab.Controller
         playlist: playlist
       }
 
-    @tracks = query.get_beats_for_collection("Headhunters").beats
-    console.log "da beats", @tracks
+    @tracks = query.get_beats_for_collection("Headhunters")
+    # console.log "da beats", @tracks
 
     # @tracks = [
     #   track "headhunters/01 morningbeat111115_5.wav", "Morning Beat 11/11/15", "Headhunters"
