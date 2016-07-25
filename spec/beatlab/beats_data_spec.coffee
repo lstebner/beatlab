@@ -1,39 +1,39 @@
-beats_data_raw = """
-this is the test beats data
-this line above the starting line is just
-a big ole comment.
-so do whatever here, it's just going to be
-
-
-..ignored.
-
----
-# ordered keys, not all are required but they must be in order
-file_path, title, collection, tags, version, created_on, last_updated_on
-
-$morningbeat111115, 01 morningbeat111115_5.wav, Morning Beat 11/11/15, [chill, unmastered]
-$morningbeat112515, 02 morningbeat112515_3.wav, Morning Beat 11/25/15, [chill, hop hop, instrumental]
-$morningbeat120115, 03 morningbeat120115_4.wav, Morning Beat 12/01/15, [instrumental]
-$morningbeat011516, morningbeat011516_4.wav, Morning beat 01/15/16, [freestyle, instrumental, samples]
-$morningbeat011816, morningbeat011816_3.wav, Morning beat 01/18/16, [scary, themed]
-
-collection do name: Headhunters, dir: headhunters
-  $morningbeat111115
-  $morningbeat112515
-  $morningbeat120115
-end
-
-collection do name: January beats
-  $morningbeat011516
-  $morningbeat011816
-end
-"""
-data_keys_in_raw = ["file_path", "title", "collection", "tags", "version", "created_on", "last_updated_on"]
-num_beats_in_raw_data = 5
-num_collections_in_raw_data = 2
-beats = null
-
 describe "BeatsData", ->
+  beats_data_raw = """
+  this is the test beats data
+  this line above the starting line is just
+  a big ole comment.
+  so do whatever here, it's just going to be
+
+
+  ..ignored.
+
+  ---
+  # ordered keys, not all are required but they must be in order
+  file_path, title, collection, tags, version, created_on, last_updated_on
+
+  $morningbeat111115, 01 morningbeat111115_5.wav, Morning Beat 11/11/15, [chill, unmastered]
+  $morningbeat112515, 02 morningbeat112515_3.wav, Morning Beat 11/25/15, [chill, hop hop, instrumental]
+  $morningbeat120115, 03 morningbeat120115_4.wav, Morning Beat 12/01/15, [instrumental]
+  $morningbeat011516, morningbeat011516_4.wav, Morning beat 01/15/16, [freestyle, instrumental, samples]
+  $morningbeat011816, morningbeat011816_3.wav, Morning beat 01/18/16, [scary, themed]
+
+  collection do name: Headhunters, dir: headhunters
+    $morningbeat111115
+    $morningbeat112515
+    $morningbeat120115
+  end
+
+  collection do name: January beats
+    $morningbeat011516
+    $morningbeat011816
+  end
+  """
+  data_keys_in_raw = ["file_path", "title", "collection", "tags", "version", "created_on", "last_updated_on"]
+  num_beats_in_raw_data = 5
+  num_collections_in_raw_data = 2
+  beats = null
+
   describe "#config", ->
     before ->
       beats = new BeatsData beats_data_raw
