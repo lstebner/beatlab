@@ -224,6 +224,11 @@ describe "BeatsData", ->
       beat = beats.store_beat beat_line_c
       expect(beat.collection).to.be("Kitchen Collection")
 
+    it "should store the beat_ref on the collection when processing a collection", ->
+      beats.start_block "collection", "name: Kitchen Collection"
+      beat = beats.store_beat beat_line_c
+      expect(beats.this_block_meta.beat_refs).to.contain("$whipped")
+
     it "should append the s3 path to a beat source when configured to use s3", ->
       test_s3_path = "http://testing_s3_path/"
       beats.config "use_s3", true

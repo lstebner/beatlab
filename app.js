@@ -933,6 +933,7 @@
       if (this.processing_block === "collection") {
         beat_data.collection = this.this_block_meta.name;
         beat_data.file_path = "" + this.this_block_meta.dir + beat_data.file_path;
+        this.this_block_meta.beat_refs.push(beat_ref);
       }
       beat_data.source = this._config.use_s3 ? "" + this._config.s3_path + beat_data.file_path : "" + this._config.beat_root_path + beat_data.file_path;
       this._all_beats.push(beat_data);
