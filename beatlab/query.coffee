@@ -34,7 +34,6 @@ class BeatLab.Query
   get_beats_for_collection: (collection) ->
     if typeof collection == "string"
       collection = @get_collection collection, false
-      console.log "beats for", collection, typeof(collection)
       unless collection?
         console.log "ERROR get_beats_for_collection could not find collection"
         return []

@@ -1077,7 +1077,6 @@
       var beat, found, j, len, ref, ref1;
       if (typeof collection === "string") {
         collection = this.get_collection(collection, false);
-        console.log("beats for", collection, typeof collection);
         if (collection == null) {
           console.log("ERROR get_beats_for_collection could not find collection");
           return [];
